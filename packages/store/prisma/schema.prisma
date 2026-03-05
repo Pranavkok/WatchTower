@@ -22,10 +22,12 @@ model user {
 } 
 
 model website {
-  id            String  @id    @default(uuid()) 
+  id            String  @id    @default(uuid())
   url           String
   user_id       String
-  time_added     DateTime
+  time_added    DateTime
+  notify_email  String?
+  notify_phone  String?
   ticks         website_tick[]
   user          user    @relation(fields: [user_id], references: [id])
 }

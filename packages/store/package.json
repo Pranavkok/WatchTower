@@ -2,6 +2,11 @@
   "name": "store",
   "module": "index.ts",
   "type": "module",
+  "scripts": {
+    "postinstall": "prisma generate",
+    "generate": "prisma generate",
+    "db:migrate": "prisma migrate dev"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },

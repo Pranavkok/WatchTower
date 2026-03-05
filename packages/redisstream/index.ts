@@ -1,6 +1,10 @@
 import { createClient } from "redis";
 
-const client = await createClient()
+const client = await createClient({
+  socket: {
+    reconnectStrategy: (retries) => Math.min(retries * 100, 3000),
+  },
+})
   .on("error", (err) => console.log("Redis Client Error", err))
   .connect();
 
@@ -34,8 +38,19 @@ export async function xAddBulk(websites: WebsiteEvent[]) {
     }
 }
 
+async function ensureGroupExists(consumerGroup: string) {
+    try {
+        await client.xGroupCreate(STREAM_NAME, consumerGroup, '$', { MKSTREAM: true });
+    } catch (err: any) {
+        if (!err?.message?.includes('BUSYGROUP')) {
+            throw err;
+        }
+    }
+}
+
 export async function xReadGroup(consumerGroup: string, workerId: string): Promise<MessageType[] | undefined> {
-    
+    await ensureGroupExists(consumerGroup);
+
     const res = await client.xReadGroup(
         consumerGroup, workerId, {
             key: STREAM_NAME,

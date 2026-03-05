@@ -1,11 +1,13 @@
 // require("dotenv").config();
 import jwt from "jsonwebtoken";
 import express from "express"
+import cors from "cors";
 const app = express();
 import { prismaClient } from "store/client";
 import { AuthInput } from "./types";
 import { authMiddleware } from "./middleware";
 
+app.use(cors());
 app.use(express.json());
 
 app.post("/website", authMiddleware, async (req, res) => {
@@ -17,7 +19,9 @@ app.post("/website", authMiddleware, async (req, res) => {
         data: {
             url: req.body.url,
             time_added: new Date(),
-            user_id: req.userId!
+            user_id: req.userId!,
+            notify_email: req.body.notify_email || null,
+            notify_phone: req.body.notify_phone || null,
         }
     })
 
@@ -52,7 +56,8 @@ app.get("/status/:websiteId", authMiddleware, async (req, res) => {
     res.json({
         url: website.url,
         id: website.id,
-        user_id: website.user_id
+        user_id: website.user_id,
+        status: website.ticks[0]?.status ?? "Unknown"
     })
 
 })

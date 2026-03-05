@@ -2,6 +2,9 @@
   "name": "pusher",
   "module": "index.ts",
   "type": "module",
+  "scripts": {
+    "dev": "bun run --hot index.ts"
+  },
   "dependencies": {
     "store": "*",
     "redisstream": "*"
