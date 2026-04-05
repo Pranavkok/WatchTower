@@ -30,6 +30,14 @@ app.post("/website", authMiddleware, async (req, res) => {
     })
 });
 
+app.get("/websites", authMiddleware, async (req, res) => {
+    const websites = await prismaClient.website.findMany({
+        where: { user_id: req.userId! },
+        select: { id: true, url: true }
+    });
+    res.json({ websites });
+});
+
 app.get("/status/:websiteId", authMiddleware, async (req, res) => {
     const website = await prismaClient.website.findFirst({
         where: {

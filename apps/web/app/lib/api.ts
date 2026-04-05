@@ -38,6 +38,15 @@ export async function addWebsite(
   return res.json();
 }
 
+export async function getWebsites(token: string): Promise<{ id: string; url: string }[]> {
+  const res = await fetch(`${API_URL}/websites`, {
+    headers: { Authorization: token },
+  });
+  if (!res.ok) throw new Error("Failed to fetch websites");
+  const data = await res.json();
+  return data.websites;
+}
+
 export async function getWebsiteStatus(
   websiteId: string,
   token: string

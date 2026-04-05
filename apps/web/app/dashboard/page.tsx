@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { addWebsite, getWebsiteStatus } from "../lib/api";
+import { addWebsite, getWebsites, getWebsiteStatus } from "../lib/api";
 
 type SavedWebsite = {
   id: string;
@@ -69,21 +69,21 @@ export default function DashboardPage() {
       router.push("/signin");
       return;
     }
-    const saved = loadSavedWebsites();
-    if (saved.length === 0) {
-      setWebsites([]);
-      return;
-    }
-    // Show loading placeholders first
-    setWebsites(saved.map((w) => ({ id: w.id, url: w.url, user_id: "", status: "Unknown", loading: true, error: false })));
-    fetchStatuses(saved, token);
+    getWebsites(token).then((saved) => {
+      if (saved.length === 0) {
+        setWebsites([]);
+        return;
+      }
+      setWebsites(saved.map((w) => ({ id: w.id, url: w.url, user_id: "", status: "Unknown", loading: true, error: false })));
+      fetchStatuses(saved, token);
+    }).catch(() => setWebsites([]));
   }, [router, fetchStatuses]);
 
   async function handleRefresh() {
     const token = getToken();
     if (!token) return;
-    const saved = loadSavedWebsites();
     setRefreshing(true);
+    const saved = await getWebsites(token).catch(() => [] as SavedWebsite[]);
     setWebsites(saved.map((w) => ({ id: w.id, url: w.url, user_id: "", status: "Unknown", loading: true, error: false })));
     await fetchStatuses(saved, token);
     setRefreshing(false);
@@ -104,9 +104,6 @@ export default function DashboardPage() {
     setAdding(true);
     try {
       const data = await addWebsite(url, token, notifyEmail || undefined, notifyPhone || undefined);
-      const saved = loadSavedWebsites();
-      const updated = [...saved, { id: data.id, url }];
-      saveWebsites(updated);
       setNewUrl("");
       setNotifyEmail("");
       setNotifyPhone("");
@@ -127,8 +124,6 @@ export default function DashboardPage() {
   }
 
   function handleRemove(id: string) {
-    const saved = loadSavedWebsites().filter((w) => w.id !== id);
-    saveWebsites(saved);
     setWebsites((prev) => prev.filter((w) => w.id !== id));
   }
 
