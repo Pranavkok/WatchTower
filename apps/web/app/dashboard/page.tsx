@@ -56,7 +56,7 @@ export default function DashboardPage() {
           const data = await getWebsiteStatus(w.id, token);
           return { ...data, loading: false, error: false };
         } catch {
-          return { id: w.id, url: w.url, user_id: "", loading: false, error: true };
+          return { id: w.id, url: w.url, user_id: "", status: "Unknown", loading: false, error: true };
         }
       })
     );

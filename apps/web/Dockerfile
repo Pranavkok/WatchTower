@@ -1,12 +1,12 @@
-FROM oven/bun:1.2.2 AS builder
+FROM oven/bun:1.3.10 AS builder
 
 WORKDIR /app
 
 COPY package.json bun.lock ./
 COPY packages/ ./packages/
-COPY apps/web/ ./apps/web/
+COPY apps/ ./apps/
 
-RUN bun install --frozen-lockfile
+RUN bun install
 
 ARG NEXT_PUBLIC_API_URL=http://localhost:3001
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
@@ -16,7 +16,7 @@ WORKDIR /app/apps/web
 RUN bun run build
 
 # ---- runner ----
-FROM oven/bun:1.2.2
+FROM oven/bun:1.3.10
 
 WORKDIR /app
 
