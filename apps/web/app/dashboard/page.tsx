@@ -114,7 +114,7 @@ export default function DashboardPage() {
 
   function handleSignout() {
     localStorage.removeItem("wt_token");
-    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem("wt_websites");
     router.push("/signin");
   }
 
