@@ -19,24 +19,9 @@ type WebsiteStatus = {
   error: boolean;
 };
 
-const STORAGE_KEY = "wt_websites";
-
 function getToken(): string | null {
   if (typeof window === "undefined") return null;
   return localStorage.getItem("wt_token");
-}
-
-function loadSavedWebsites(): SavedWebsite[] {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as SavedWebsite[]) : [];
-  } catch {
-    return [];
-  }
-}
-
-function saveWebsites(websites: SavedWebsite[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(websites));
 }
 
 export default function DashboardPage() {

@@ -20,7 +20,7 @@ function useCountUp(target: number, duration = 2000) {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !started.current) {
+        if (entry?.isIntersecting && !started.current) {
           started.current = true;
           const start = Date.now();
           const tick = () => {
@@ -99,7 +99,7 @@ function RadarWidget() {
 }
 
 function LiveFeed() {
-  const [sites, setSites] = useState(MOCK_SITES);
+  const sites = MOCK_SITES;
   const [checking, setChecking] = useState(0);
 
   useEffect(() => {
@@ -185,10 +185,7 @@ export default function Home() {
             </div>
           </div>
 
-          <h1 style={styles.title}
-            className="animate-fadeInUp opacity-0"
-            // @ts-ignore
-            style2={{ animationDelay: "0.2s", animationFillMode: "forwards" }}>
+          <h1 style={styles.title} className="animate-fadeInUp opacity-0 delay-200">
             <span style={{ display: "block", ...styles.titleLine1 }}>
               Know when your
             </span>
