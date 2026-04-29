@@ -35,8 +35,8 @@ async function sendEmailAlert(to: string, url: string) {
 
 async function sendWhatsAppAlert(to: string, url: string) {
     await twilioClient.messages.create({
-        from: process.env.TWILIO_PHONE_FROM,
-        to: to,
+        from: `whatsapp:${process.env.TWILIO_WHATSAPP_FROM}`,
+        to: `whatsapp:${to}`,
         body: `🚨 WatchTower Alert: Your website ${url} is down!`,
     });
 }

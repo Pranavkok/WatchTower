@@ -4,6 +4,7 @@ import express from "express"
 import cors from "cors";
 const app = express();
 import { prismaClient } from "store/client";
+import { xAddBulk } from "redisstream/client";
 import { AuthInput } from "./types";
 import { authMiddleware } from "./middleware";
 
@@ -24,6 +25,8 @@ app.post("/website", authMiddleware, async (req, res) => {
             notify_phone: req.body.notify_phone || null,
         }
     })
+
+    await xAddBulk([{ url: website.url, id: website.id }]);
 
     res.json({
         id: website.id
