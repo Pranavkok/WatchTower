@@ -106,7 +106,7 @@ services:
       context: .
       dockerfile: apps/web/Dockerfile
       args:
-        NEXT_PUBLIC_API_URL: http://98.93.174.31:3001
+        NEXT_PUBLIC_API_URL: http://15.206.2.17:3001
     ports:
       - "3000:3000"
     depends_on:
