@@ -93,7 +93,7 @@ async function fetchWebsite(url: string, websiteId: string) {
     return new Promise<void>((resolve) => {
         const startTime = Date.now();
 
-        axios.get(url)
+        axios.get(url, { timeout: 10000 })
             .then(async () => {
                 const endTime = Date.now();
                 await prismaClient.website_tick.create({
